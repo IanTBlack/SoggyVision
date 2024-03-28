@@ -1,0 +1,166 @@
+time:
+  units_tex: r'$UTC$'
+  description: Time assigned to each sample based on the clock of the computer running the software, converted to UTC.
+
+wavelength_a:
+  units: nanometers
+  units_tex: r'$UTC$'
+  description: The wavelength bins of the absorption channel derived from the factory calibration. Each factory calibration will be different.
+
+wavelength_c:
+  units: nanometers
+  units_tex: r'$UTC$'
+  description: The wavelength bins of the attenuation channel derived from the factory calibration. Each factory calibration will be different.
+
+offset_a:
+  units: inverse_meters
+  units_tex: r'$\frac{1}{m}$'
+  description: Factory derived clean water offsets for absorption at the tcal value.
+
+offset_c:
+  units: inverse_meters
+  units_tex: r'$\frac{1}{m}$'
+  description: Factory derived clean water offsets for attenuation at the tcal value.
+
+delta_t_a:
+  units: unitless
+  description: Factory derived absorption temperature correction values for each temperature bin.
+
+delta_t_c:
+  units: unitless
+  description: Factory derived attenuation temperature correction values for each temperature bin.
+
+temperature_bins:
+  units: degrees Celsius
+  units_tex: r"$^{\circ}C$"
+  description: Factory established temperature calibration bins.
+
+frame_length:
+  units: bytes
+  units_tex: r'$bytes$'
+  description: The length of each binary frame/packet.
+
+frame_type:
+  description: The type of frame output by the ACS. Should always be greater than or equal to 5.
+
+a_reference_dark:
+  units: counts
+  units_tex: r'$counts$'
+  description: The dark values for the reference for the absorption channel.
+
+c_reference_dark:
+  units: counts
+  units_tex: r'$counts$'
+  description: The dark values for the reference for the attenuation channel.
+
+a_signal_dark:
+  units: counts
+  units_tex: r'$counts$'
+  description: The dark values for the signal from the absorption channel.
+
+c_signal_dark:
+  units: counts
+  units_tex: r'$counts$'
+  description: The dark values for the signal from the attenuation channel.
+
+pressure_signal:
+  units: counts
+  units_tex: r'$counts$'
+  description: The pressure counts from a pressure sensor embedded within an ACS. For ACS' with no pressure sensor, this value will always be zero and can safely be ignored. This value is not used in any calculations.
+
+t_external:
+  units: counts
+  units_tex: r'$counts$'
+  description: The temperature counts from the external thermistor.
+
+t_internal:
+  units: counts
+  units_tex: r'$counts$'
+  description: The temperature counts from the internal thermistor. Used to compute the internal temperature of the housing and for inherent sensor corrections.
+
+a_reference:
+  units: counts
+  units_tex: r'$counts$'
+  description: The reference counts for the absorption channel. Used in the computation of uncorrected and measured absorption.
+
+c_reference:
+  units: counts
+  units_tex: r'$counts$'
+  description: The reference counts for the attenuation channel. Used in the computation of uncorrected and measured attenuation.
+
+a_signal:
+  units: counts
+  units_tex: r'$counts$'
+  description: The signal counts for the absorption channel. Used in the computation of uncorrected and measured absorption.
+
+c_signal:
+  units: counts
+  units_tex: r'$counts$'
+  description: The signal counts for the attenuation channel. Used in the computation of uncorrected and measured attenuation.
+
+elapsed_time:
+  units: milliseconds
+  units_tex: r'$ms$'
+  description: The amount of time that has passed (in milliseconds) since the ACS started outputting data.
+
+a_uncorr:
+  units: inverse_meters
+  units_tex: r'$\frac{1}{m}$'
+  description: The uncorrected absorption computed from the absorption reference and signal counts and the factory offset values. No internal temperature correction has been applied. Can be used in conjunction with c_uncorr to identify blockages, bubbles, etc.
+  ancillary_variables: [a_reference, a_signal, path_length]
+
+c_uncorr:
+  units: inverse_meters
+  units_tex: r'$\frac{1}{m}$'
+  description: The uncorrected attenuation computed from the attenuation reference and signal counts and the factory offset values. No internal temperature correction has been applied. Can be used in conjunction with a_uncorr to identify blockages, bubbles, etc.
+  ancillary_variables: [c_reference, c_signal, path_length]
+
+a_m:
+  units: inverse_meters
+  units_tex: r'$\frac{1}{m}$'
+  description: The measured absorption computed by applying an internal temperature correction to a_uncorr. No temperature, salinity, or scattering correction has been applied.
+  ancillary_variables: [a_uncorr, internal_temperature, offset_a]
+
+c_m:
+  units: inverse_meters
+  units_tex: r'$\frac{1}{m}$'
+  description: The measured attenuation computed from the attenuation reference and signal counts. No internal temperature correction has been applied. Can be used in conjunction with a_uncorr to identify blockages, bubbles, etc.
+  ancillary_variables: [c_uncorr, internal_temperature, offset_c]
+
+internal_temperature:
+  units: degrees Celsius
+  units_tex: r"$^{\circ}C$"
+  description: The temperature measured by the internal thermistor in Celsius.
+  ancillary_variables: t_internal
+
+external_temperature:
+  units: degrees Celsius
+  units_tex: r"$^{\circ}C$"
+  description: The temperature measured by the external thermistor in Celsius.
+  ancillary_variables: t_external
+
+binary_frame:
+  description: The parsed out binary frame from an ACS converted to a byte string. Contains all frame information.
+
+flag_gap_test:
+  description: A QARTOD-like flag indicating the syntax results. The gap test verifies the timing of the incoming data. If the sample gap exceeds 250 milliseconds or if the buffer length exceeds more than a single packet length, then the data is flagged as SUSPECT. A substantially long buffer length indicates an issue in data acquistion, as data is being collected faster than it can be displayed/logged. 1 = PASS, 2 = NOT_EVALUATED, 3 = SUSPECT, 4 = FAIL, 9 = MISSING
+
+flag_syntax_test:
+  description: A QARTOD-like flag indicating the syntax results. The syntax test verifies the length of each incoming packet a.nd the checksum. 1 = PASS, 2 = NOT_EVALUATED, 3 = SUSPECT, 4 = FAIL, 9 = MISSING
+
+flag_gross_range_test_a_m:
+  description: --THIS TEST SHOULD NOT BE TAKEN AT FACE VALUE FOR PUBLICATIONS.-- Instead, it can be used to diagnose AC (alternating current) noise and other sensor issues. The gross range test is performed on each value at each wavelength bin, thus maintaining the same shape as the time and wavelength dimensions. The dynamic range of an ACS is 0.001 to 10, but vales between -0.005 and 0 have been deemed acceptable by the manufacturer after correction. The ACS sensor has been known to drift over time, both in the field and in storage, making regular blank calibrations important. NOTE -- This test has been performed on data that has NOT received additional temperature-salinity-scattering correction. After proper correction, the gross range test should be applied again.
+  ancillary_variables: a_m
+
+flag_gross_range_test_c_m:
+  description: --THIS TEST SHOULD NOT BE TAKEN AT FACE VALUE FOR PUBLICATIONS.-- Instead, it can be used to diagnose AC (alternating current) noise and other sensor issues. The gross range test is performed on each value at each wavelength bin, thus maintaining the same shape as the time and wavelength dimensions. The dynamic range of an ACS is 0.001 to 10, but vales between -0.005 and 0 have been deemed acceptable by the manufacturer after correction. The ACS sensor has been known to drift over time, both in the field and in storage, making regular blank calibrations important. NOTE -- This test has been performed on data that has NOT received additional temperature-salinity-scattering correction. After proper correction, the gross range test should be applied again.
+  ancillary_variables: c_m
+
+flag_elapsed_time:
+  description: A custom QC test for indicating to an end user the validity of the data. According the current ACS manual, any data taken within the first four minutes is considered bad. This time period has changed over the years, from anywhere between 60 seconds to 240 seconds. Data taken within the first 60 seconds is flagged as bad (4). Data taken between 60-240 seconds is flagged as suspect (3).
+  ancillary_variables: elapsed_time
+
+flag_outside_temperature_calibration:
+  description: A custom QC test for indicating if the temperature measured by the internal thermistor is outside of the calibration range.
+  ancillary_variables: internal_temperature
+

@@ -1,0 +1,8 @@
+pyserial
+pyqtgraph
+PyQt6
+PyQt6-tools
+netCDF4
+numpy
+scipy
+xarray
